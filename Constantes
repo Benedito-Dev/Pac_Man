@@ -1,0 +1,39 @@
+
+#Dimensões da Tela
+LARGURA = 680
+ALTURA = 800
+
+#Posições
+
+ALTURA_MAPA = 160
+LARGURA_MAPA = 235
+
+
+#Titulo do Jogo
+TITLE_GAME = ('GAME PACMAN')
+
+#FPS
+FPS = 30
+
+#CORES
+
+PRETO = (0, 0, 0)
+AMARELO = (244, 233, 51)
+BRANCO = (255, 255, 255)
+
+#Imagens
+ARCADE = ('Arcade - Pac-Man - General Sprites.png')
+LOGO = ('pacman-logo-1.png')
+
+#Fonte
+
+FONTE = 'arial'
+
+#Sons
+
+MUSICA_START = 'intermission.wav'
+
+#Personagens
+velocidade = 10
+x = 340
+y = 800
