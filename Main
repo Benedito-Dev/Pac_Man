@@ -1,0 +1,192 @@
+import pygame
+import os
+import Sprites
+import Constantes
+from Constantes import *
+from Sprites import *
+
+class Game:
+    def __init__(self):
+
+        # Display Game
+        pygame.init()
+        pygame.mixer.init()
+        self.tela = pygame.display.set_mode((LARGURA, ALTURA))
+        pygame.display.set_caption(TITLE_GAME)
+        self.relogio = pygame.time.Clock()
+        self.esta_rodando = True
+        self.fonte = pygame.font.match_font(FONTE)
+        self.carregar_arquivos()
+
+    def novo_jogo(self):
+        self.todas_as_sprites = pygame.sprite.Group()
+        self.rodar()
+
+    def rodar(self):
+        todas_as_sprites = pygame.sprite.Group(self)
+        pac_man = Sprites.Pac_man
+        todas_as_sprites.add(pac_man)
+        # loop do jogo
+        self.jogando = True
+        while self.jogando:
+            self.eventos()
+            self.atualizar_sprites()
+            self.desenhar_sprites()
+
+    def eventos(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                if self.jogando:
+                    self.jogando = False
+                self.esta_rodando = False
+
+    def atualizar_sprites(self):
+        self.todas_as_sprites.update()
+
+    def desenhar_sprites(self):
+        self.tela.fill(PRETO)
+        self.todas_as_sprites.draw(self.tela)
+        pygame.display.flip()
+
+    def update(self):
+        if self.animar == True:
+            self.atual = self.atual + 0.5
+            Constantes.x+=velocidade
+            if self.atual >= len(self.sprites):
+                self.atual = 0
+                self.animar = False
+            self.image = self.sprites[int(self.atual)]
+
+    def carregar_arquivos(self):
+        # Carregar os arquivos de audio e imagens
+        diretorio_imagens = os.path.join(os.getcwd(), 'imagens')
+        self.diretorio_audios = os.path.join(os.getcwd(), 'audios')
+        self.spritesheet = os.path.join(diretorio_imagens, Constantes.ARCADE)
+        self.pacman_start_logo = os.path.join(diretorio_imagens, Constantes.LOGO)
+        self.pacman_start_logo = pygame.image.load(self.pacman_start_logo).convert()
+        self.mapa = pygame.image.load('Imagens/Mapa/0.png')
+        self.vida = pygame.image.load('Imagens/Pac_man/2.png')
+    def mostrar_texto(self, texto, tamanho, cor, x, y):
+        # Exibe um texto na tela do jogo
+        fonte = pygame.font.Font(self.fonte, tamanho)
+        texto = fonte.render(texto, True, cor)
+        texto_rect = texto.get_rect()
+        texto_rect.midtop = (x, y)
+        self.tela.blit(texto, texto_rect)
+
+    def mostrar_start_logo(self, x, y):
+        start_logo_rect = self.pacman_start_logo.get_rect()
+        start_logo_rect.midtop = (x, y)
+        self.tela.blit(self.pacman_start_logo, start_logo_rect)
+
+
+    def mostrar_tela_start(self):
+
+        #musica
+        pygame.mixer.music.load('Sons/Sons/game_start.mp3')
+        pygame.mixer.music.play()
+
+        #Logo
+        self.mostrar_start_logo(LARGURA/2, 20)
+
+        #Textos
+        self.mostrar_texto('-Pressione uma tecla para jogar',
+                          32, Constantes.AMARELO,
+                          Constantes.LARGURA / 2, Constantes.ALTURA / 2)
+
+        self.mostrar_texto("Desenvolvido por Benedito Bittencourt",
+                          19,
+                          Constantes.BRANCO,
+                          Constantes.LARGURA
+                          / 2,
+                          720)
+
+        self.mostrar_texto("&",
+                           19,
+                           Constantes.BRANCO,
+                           (Constantes.LARGURA
+                           / 2) - 12,
+                           745)
+
+        self.mostrar_texto("Desenhado por Arthur Ancelmo",
+                           19,
+                           Constantes.BRANCO,
+                           (Constantes.LARGURA
+                           / 2) - 10,
+                           770)
+
+        pygame.display.flip()
+        self.esperar_por_jogador()
+
+    def esperar_por_jogador(self):
+        esperando = True
+        while esperando:
+            self.relogio.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    esperando = False
+                    self.esta_rodando = False
+                if event.type == pygame.KEYUP:
+                    esperando = False
+                    pygame.mixer.music.stop()
+                    pygame.mixer.Sound('Sons/Sons/munch_1.mp3').play()
+
+    def mostrar_mapa(self, x, y):
+        self.tela.fill(PRETO)
+        mapa_rect = self.mapa.get_rect()
+        mapa_rect.midtop = (x, y)
+        self.mapa = pygame.transform.scale(self.mapa, (223 * 2, 246 * 2))
+        self.tela.blit(self.mapa, mapa_rect)
+
+    def jogador_jogando(self):
+       jogando = True
+       while jogando:
+            self.relogio.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    jogando = False
+                    self.esta_rodando = False
+
+
+    def mostrar_tela_game(self, x, y):
+        self.mostrar_mapa(x, y)
+        self.mostrar_texto("Score: 0000", 20, BRANCO, 60,0)
+        self.mostrar_texto("Vidas:", 20, BRANCO, 34, 25)
+        #Vidas
+        vidas_rect = self.vida.get_rect()
+        vidas_rect.midtop = (70, 28)
+        self.vida = pygame.transform.scale(self.vida, (12 * 1.5, 13 * 1.5))
+        self.tela.blit(self.vida, vidas_rect)
+        vidas_rect = self.vida.get_rect()
+        vidas_rect.midtop = (100, 28)
+        self.vida = pygame.transform.scale(self.vida, (12 * 1.5, 13 * 1.5))
+        self.tela.blit(self.vida, vidas_rect)
+        vidas_rect = self.vida.get_rect()
+        vidas_rect.midtop = (130, 28)
+        self.vida = pygame.transform.scale(self.vida, (12 * 1.5, 13 * 1.5))
+        self.tela.blit(self.vida, vidas_rect)
+        #/Vidas
+        pygame.display.flip()
+        self.jogador_jogando()
+
+
+
+
+    def mostrar_tela_game_over(self):
+        pass
+
+#Sprites
+todas_as_sprites = pygame.sprite.Group()
+pac_man = Sprites.Pac_man()
+todas_as_sprites.add(pac_man)
+
+#Jogo
+g = Game()
+g.mostrar_tela_start()
+g.mostrar_tela_game(LARGURA_MAPA, ALTURA_MAPA)
+g.rodar()
+
+while g.esta_rodando:
+    g.novo_jogo()
+    g.rodar()
+    g.mostrar_tela_game_over()
