@@ -1,0 +1,41 @@
+import pygame
+import os
+import Constantes
+from Constantes import *
+
+
+#class Mapa(pygame.sprite.Sprite):
+    #def __init__(self):
+     #   pygame.sprite.Sprite.__init__(self)
+      #  self.sprites = []
+      #  self.sprites.append(pygame.image.load(f'Imagens/Mapa/0.png'))
+       # self.sprites.append(pygame.image.load('Imagens/Mapa/1.png'))
+
+       # self.atual = 0
+       # self.image = self.sprites[self.atual]
+       # self.image = pygame.transform.scale(self.image, (128 * 2, 64 * 2))
+        # Hitbox
+       # self.rect = self.image.get_rect()
+       # self.rect.topleft = LARGURA_MAPA, ALTURA_MAPA
+
+
+class Pac_man(pygame.sprite.Sprite):
+    def __int__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.sprites = []
+        self.sprites.append(pygame.image.load('/Imagens/Pac_man/2.png'))
+        self.sprites.append(pygame.image.load('/Imagens/Pac_man/3.png'))
+        self.sprites.append(pygame.image.load('/Imagens/Pac_man/4.png'))
+        self.sprites.append(pygame.image.load('/Imagens/Pac_man/5.png'))
+        self.sprites.append(pygame.image.load('/Imagens/Pac_man/6.png'))
+        self.sprites.append(pygame.image.load('/Imagens/Pac_man/7.png'))
+        self.sprites.append(pygame.image.load('/Imagens/Pac_man/8.png'))
+        self.sprites.append(pygame.image.load('/Imagens/Pac_man/9.png'))
+
+        self.atual = 0
+        self.image = self.sprites[self.atual]
+
+        self.rect = self.image.get_rect()
+        self.rect.midtop = LARGURA/2, ALTURA/2
+
+        self.animar = False
